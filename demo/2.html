@@ -1,0 +1,134 @@
+<!doctype html>
+
+<title>CodeMirror: XML Autocomplete Demo</title>
+<meta charset="utf-8"/>
+<link rel=stylesheet href="../doc/docs.css">
+
+<link rel="stylesheet" href="../theme/monokai.css">
+
+<link rel="stylesheet" href="../lib/codemirror.css">
+<link rel="stylesheet" href="../addon/hint/show-hint.css">
+<script src="../lib/codemirror.js"></script>
+<script src="../addon/hint/show-hint.js"></script>
+<script src="../addon/hint/anyword-hint.js"></script>
+<script src="../addon/hint/sql-hint.js"></script>
+<script src="../mode/sql/sql.js"></script>
+<style type="text/css">
+      .CodeMirror { border: 1px solid #eee; }
+    </style>
+
+<article>
+<h2>XML Autocomplete Demo</h2>
+<form><textarea id="code" name="code"><!-- write some xml below -->
+</textarea></form>
+
+    <p>Press <strong>ctrl-space</strong>, or type a '&lt;' character to
+    activate autocompletion. This demo defines a simple schema that
+    guides completion. The schema can be customized—see
+    the <a href="../doc/manual.html#addon_xml-hint">manual</a>.</p>
+
+    <script>
+
+      function completeAfter(cm, pred) {
+        var cur = cm.getCursor();
+        if (!pred || pred()) setTimeout(function() {
+          if (!cm.state.completionActive)
+            cm.showHint({completeSingle: false,hint: CodeMirror.hint.anyword+CodeMirror.hint.sql});
+        }, 100);
+        return CodeMirror.Pass;
+      }
+
+      function completeIfAfterLt(cm) {
+        return completeAfter(cm, function() {
+          var cur = cm.getCursor();
+          return cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur) == "<";
+        });
+      }
+
+      function completeIfInTag(cm) {
+        return completeAfter(cm, function() {
+          var tok = cm.getTokenAt(cm.getCursor());
+          if (tok.type == "string" && (!/['"]/.test(tok.string.charAt(tok.string.length - 1)) || tok.string.length == 1)) return false;
+          var inner = CodeMirror.innerMode(cm.getMode(), tok.state).state;
+          return inner.tagName;
+
+        });
+      }
+      CodeMirror.commands.autocomplete = function(cm) {
+        cm.showHint({hint: CodeMirror.hint.anyword});
+      }
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        mode: "text/x-mysql",
+        lineNumbers: true,
+        theme: "monokai",
+        extraKeys: {
+            "'a'" : completeAfter,
+            "'b'" : completeAfter,
+            "'c'" : completeAfter,
+            "'d'" : completeAfter,
+            "'e'" : completeAfter,
+            "'f'" : completeAfter,
+            "'g'" : completeAfter,
+            "'h'" : completeAfter,
+            "'i'" : completeAfter,
+            "'j'" : completeAfter,
+            "'k'" : completeAfter,
+            "'l'" : completeAfter,
+            "'m'" : completeAfter,
+            "'n'" : completeAfter,
+            "'o'" : completeAfter,
+            "'p'" : completeAfter,
+            "'q'" : completeAfter,
+            "'r'" : completeAfter,
+            "'s'" : completeAfter,
+            "'t'" : completeAfter,
+            "'u'" : completeAfter,
+            "'v'" : completeAfter,
+            "'w'" : completeAfter,
+            "'x'" : completeAfter,
+            "'y'" : completeAfter,
+            "'z'" : completeAfter,
+            "'A'" : completeAfter,
+            "'B'" : completeAfter,
+            "'C'" : completeAfter,
+            "'D'" : completeAfter,
+            "'E'" : completeAfter,
+            "'F'" : completeAfter,
+            "'G'" : completeAfter,
+            "'H'" : completeAfter,
+            "'I'" : completeAfter,
+            "'J'" : completeAfter,
+            "'K'" : completeAfter,
+            "'L'" : completeAfter,
+            "'M'" : completeAfter,
+            "'N'" : completeAfter,
+            "'O'" : completeAfter,
+            "'P'" : completeAfter,
+            "'Q'" : completeAfter,
+            "'R'" : completeAfter,
+            "'S'" : completeAfter,
+            "'T'" : completeAfter,
+            "'U'" : completeAfter,
+            "'V'" : completeAfter,
+            "'W'" : completeAfter,
+            "'X'" : completeAfter,
+            "'Y'" : completeAfter,
+            "'Z'" : completeAfter,
+            "'_'" : completeAfter,
+
+
+          "'<'": completeAfter,
+          "'/'": completeIfAfterLt,
+          "' '": completeIfInTag,
+          "'='": completeIfInTag,
+          "Ctrl": "autocomplete"
+        },
+        hintOptions:{
+                tables: {
+                    table1: ['name', 'score', 'birthDate'],
+                    table2: ['name', 'population', 'size'],
+                }
+            }
+      });
+    </script>
+  </article>
